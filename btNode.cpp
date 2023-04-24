@@ -1,27 +1,26 @@
 #include "btNode.h"
 
 // Parameters: Root node of a BST, and an integer to be added to the tree
-// Searches through the tree iteratively for the proper spot for the newInt,
-// going to the child left if the newInt is less than the current node, and the
-// right child if it is greater than the current node. Once it reaches an empty
-// path it will insert the newInt.
 void bst_insert (btNode*& bstRoot, int newInt){
+//Pre:  (none)
+//Post: Given integer has been added to the tree, maintaining the sorted
+//      nature of a BST
 
-    // newNode to be added to the tree, with newInt as the data, and no children
+    //newNode to be added to the tree, with newInt as the data, and no children
     btNode* newNode = new btNode;
     newNode->data = newInt;
     newNode->left = 0;
     newNode->right = 0;
 
 
-    // Creates a cursor and precursor to traverse through the tree
+    //Creates a cursor and precursor to traverse through the tree
     btNode* cursor = bstRoot;
 
+    //Empty tree, new node becomes root
     if (bstRoot == 0){
         bstRoot = newNode;
         return;
     }
-
 
     //Find where to insert newNode, and insert it
     while (cursor!=0){
@@ -35,11 +34,8 @@ void bst_insert (btNode*& bstRoot, int newInt){
                 cursor->right = newNode;
                 break;
             }
-            //Non empty right child
-            else{
-                //Traverse right
-                cursor = cursor->right;
-            }
+            //Non empty right child, traverse right
+            else{cursor = cursor->right;}
        }
        //newInt is less than current node's, look to the left
        else if (newInt < cursor->data){
@@ -50,11 +46,8 @@ void bst_insert (btNode*& bstRoot, int newInt){
                 cursor->left = newNode;
                 break;
             }
-            //Non empty left child
-            else{
-                //Traverse left
-                cursor = cursor->left;
-            }
+            //Non empty left child, traverse left
+            else{cursor = cursor->left;}
        }
        //newInt is equal to current node's
        else{
@@ -71,25 +64,18 @@ void bst_insert (btNode*& bstRoot, int newInt){
 }
 
 // Parameters: Root node of a BST, and an integer to be removed from the tree
-// Recursively sorts through to find the node to be removed from the tree
-// If the tree does not contain the integer returns false
-// If the tree does contain the integer, removes it (potentially with help from
-// another recursive function - bst_remove_max) returning true
 bool bst_remove (btNode*& bstRoot, int removeInt){
+//Pre:  (none)
+//Post: Returns true if the integer given was in the tree and has been removed
+    
     //If tree is empty
-    if (bstRoot == 0){
-        return false;
-    }
+    if (bstRoot == 0){return false;}
 
     //If removeInt is greater than current node traverse right
-    else if(bstRoot->data < removeInt){
-        return bst_remove (bstRoot->right, removeInt);
-    }
+    else if(bstRoot->data < removeInt){return bst_remove (bstRoot->right, removeInt);}
 
     //If removeInt is less than current node traverse left
-    else if(bstRoot->data > removeInt){
-        return bst_remove (bstRoot->left, removeInt);
-    }
+    else if(bstRoot->data > removeInt){return bst_remove (bstRoot->left, removeInt);}
 
     //If removeInt is equal to current node
     else{
@@ -99,17 +85,14 @@ bool bst_remove (btNode*& bstRoot, int removeInt){
             btNode* oldBstRoot = bstRoot;
 
             //No children
-            if (bstRoot->left == 0 && bstRoot->right == 0){
-                bstRoot = 0;
-            }
+            if (bstRoot->left == 0 && bstRoot->right == 0){bstRoot = 0;}
+            
             //Right child
-            else if (bstRoot->left == 0){
-                bstRoot = bstRoot->right;
-            }
+            else if (bstRoot->left == 0){bstRoot = bstRoot->right;}
+            
             //Left child
-            else{
-                bstRoot = bstRoot->left;
-            }
+            else{bstRoot = bstRoot->left;}
+            
             //Delete removeInt and return true
             delete oldBstRoot;
             return true;
@@ -117,25 +100,15 @@ bool bst_remove (btNode*& bstRoot, int removeInt){
 
 
         //Has two children
-        else{
-            return bst_remove_max(bstRoot->left, bstRoot);
-        }
-
-
-
-
-
+        else{return bst_remove_max(bstRoot->left, bstRoot);}
     }
-
 }
 
 //Parameters (received from parent function bst_insert): The left subtree of a
 //node that is being removed, and the address of the node itself
-//Recursively searches through the left subtree of the node we want to remove
-//until its highest value is found.
-//Replaces the to be removed node's data field with this highest value, and then
-//removes the highest value's old node moving its left child to its old position
 bool bst_remove_max (btNode*& cursor, btNode*& removeNode){
+//Pre:  (none)
+//Post: Returns true when the given (two child) node has been removed
 
     // Base case, current node is the max in its subtree
     if (cursor->right == 0){
@@ -157,15 +130,13 @@ bool bst_remove_max (btNode*& cursor, btNode*& removeNode){
     }
 
     //Recursive until we hit the max in this subtree
-    else{
-        return bst_remove_max(cursor->right, removeNode);
-    }
-
-
-
+    else{return bst_remove_max(cursor->right, removeNode);}
 }
 
 
+
+
+//PROVIDED BY PROFESSOR - NOT OWN WORK
 void portToArrayInOrder(btNode* bst_root, int* portArray)
 {
    if (bst_root == 0) return;
